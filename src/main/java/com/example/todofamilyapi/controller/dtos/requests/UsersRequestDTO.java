@@ -4,7 +4,7 @@ public record UsersRequestDTO(
         Long id,
         String name,
         String email,
-        String passsword
+        String password
 ) {
 
 }

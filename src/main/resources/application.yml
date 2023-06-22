@@ -10,3 +10,9 @@ spring:
 
   profiles:
     active: ${SCOPE:dev}
+
+api:
+  app:
+    jwtCookieName: token
+    jwtSecret: ${SECRET:localSecret}
+    jwtExpirationMs: 86400000
