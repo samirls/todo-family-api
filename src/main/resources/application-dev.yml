@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/todofamily
     username: postgres
-    password: 1243
+    password: 99433900
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -23,7 +23,6 @@ spring:
   h2:
     console:
       enabled: false
-
 
 logging:
   level:
