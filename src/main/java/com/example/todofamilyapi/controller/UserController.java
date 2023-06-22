@@ -30,17 +30,17 @@ public class UserController {
         return usersMapper.fromEntity(userService.save(entity));
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("{id}")
     public UsersResponseDTO findById(@PathVariable Long id) {
-        return  usersMapper.fromEntity(userService.findById(id));
+        return usersMapper.fromEntity(userService.findById(id));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public void deleteById(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
 
-    @GetMapping("/find-all-users")
+    @GetMapping
     public List<UsersResponseDTO> listAllUsers() {
         return userService.listAllUsers().stream().map(usersMapper::fromEntity).toList();
     }

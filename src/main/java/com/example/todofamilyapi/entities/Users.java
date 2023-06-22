@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotBlank;
@@ -16,6 +20,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.time.LocalDate.now;
 
@@ -51,8 +56,13 @@ public class Users {
     @Column(updatable = false)
     private LocalDate createdAt;
 
-    @OneToOne
-    private Family family;
+    @ManyToMany
+    @JoinTable(
+            name = "users_family",
+            joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "family_id", referencedColumnName = "id")
+    )
+    private List<Family> family;
 
     @PrePersist
     public void prePersist() {

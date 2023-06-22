@@ -1,5 +1,6 @@
 package com.example.todofamilyapi.exceptions.handler;
 
+import com.example.todofamilyapi.exceptions.FamilyNotFoundException;
 import com.example.todofamilyapi.exceptions.FileNotSupportedException;
 import com.example.todofamilyapi.exceptions.PermissionDeniedException;
 import com.example.todofamilyapi.exceptions.UserNotFoundException;
@@ -47,6 +48,17 @@ public class RestExceptionHandler {
                 .build();
     }
 
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(FamilyNotFoundException.class)
+    public ExceptionFilters handleFamilyNotFound(final FamilyNotFoundException ex) {
+        return ExceptionFilters.builder()
+                .timestamp(LocalDateTime.now())
+                .details(ex.getMessage())
+                .devMsg(ex.getClass().getName())
+                .status(NOT_FOUND.value())
+                .title("family not found!")
+                .build();
+    }
 
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(DateTimeParseException.class)
