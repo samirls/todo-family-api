@@ -14,27 +14,23 @@ public class UserController {
 
     private final UserService userService;
 
-
     @PostMapping("/save")
-    public Users saveUser(@RequestBody Users users){
-        Users save = userService.save(users);
-        return save;
+    public Users saveUser(@RequestBody Users users) {
+        return userService.save(users);
     }
 
     @GetMapping("/find/{id}")
-    public Users findById(@PathVariable Long id){
-        Users byId = userService.findById(id);
-        return byId;
+    public Users findById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Long id){
+    public void deleteById(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
 
     @GetMapping("/find-all-users")
-    public List<Users> listAllUsers(){
-        List<Users> users = userService.listAllUsers();
-        return users;
+    public List<Users> listAllUsers() {
+        return userService.listAllUsers();
     }
 }

@@ -14,13 +14,11 @@ public class UserService {
     private final UsersRepository usersRepository;
 
     public Users save(Users users){
-        Users save = usersRepository.save(users);
-        return save;
+        return usersRepository.save(users);
     }
 
     public Users findById(Long id){
-        Users findUser = usersRepository.findById(id).get();
-        return findUser;
+        return usersRepository.findById(id).get();
     }
 
     public void deleteUserById(Long id){
@@ -28,8 +26,6 @@ public class UserService {
     }
 
     public List<Users> listAllUsers(){
-        List<Users> all = usersRepository.findAll();
-        return all;
+        return usersRepository.findAll();
     }
-
 }
