@@ -48,8 +48,8 @@ public class JWTUtils {
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         final var findedUser = userService.findByEmail(userPrincipal.getUsername());
 
-        if (findedUser != null) {
-            String jwt = generateTokenFromUsername(findedUser);
+        if (findedUser.isPresent()) {
+            String jwt = generateTokenFromUsername(findedUser.get());
             final var builder = ResponseCookie.from(jwtCookie, jwt)
                     .path("/").maxAge(3600000L)
                     .secure(true)

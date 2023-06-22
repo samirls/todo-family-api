@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -49,10 +49,10 @@ public class AuthController {
     }
 
     private void lastAccess(Authentication authentication) {
-        final var user = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).username());
-        if (user != null) {
-            user.setLastAccess(LocalDateTime.now());
-            userService.save(user);
+        final Optional<Users> user = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).username());
+        if (user.isPresent()) {
+            user.get().lastAccess();
+            userService.save(user.get());
         }
     }
 

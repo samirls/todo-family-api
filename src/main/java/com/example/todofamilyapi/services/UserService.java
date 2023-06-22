@@ -36,26 +36,23 @@ public class UserService {
         return usersRepository.findAll();
     }
 
-    public Users findByEmail(String email) {
-        return usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("user not found!"));
-    }
-
-    public Optional<Users> findByEmailOptional(String email) {
+    public Optional<Users> findByEmail(String email) {
         return usersRepository.findByEmail(email);
     }
+
     public Boolean existsByEmail(String email) {
         return usersRepository.existsByEmail(email);
     }
 
     public void insertAdminUser() {
-        if (findByEmailOptional(ADMIN).isEmpty()) {
+        if (findByEmail(ADMIN).isEmpty()) {
             log.debug("Administrator user not found, creating...");
             final var user = new Users();
             user.setName("Administrator");
             user.setAdmin(true);
             user.setActive(true);
             user.setPassword(new BCryptPasswordEncoder().encode("123456"));
-            user.setEmail("admin@admin.com");
+            user.setEmail(ADMIN);
             save(user);
         } else {
             log.info("insertAdminUser: admin user already exists");

@@ -59,6 +59,10 @@ public class Users {
         this.createdAt = now();
     }
 
+    public void lastAccess() {
+        this.lastAccess = LocalDateTime.now();
+    }
+
     public Users(String name, String email) {
         this.name = name;
         this.email = email;

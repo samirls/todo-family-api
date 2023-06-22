@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        final var user = userService.findByEmail(email);
+        final var user = userService.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not Found with email: " + email));;
 
         final var authorityListAdmin = createAuthorityList("ROLE_USER", "ROLE_ADMIN");
         final var authorityListUser = createAuthorityList("ROLE_USER");
