@@ -25,6 +25,10 @@ ext {
     set('springCloudVersion', "2022.0.3")
 }
 
+bootJar {
+    archiveName 'todofamily.jar'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
