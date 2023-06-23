@@ -24,11 +24,6 @@ spring:
     console:
       enabled: false
 
-springdoc:
-  api-docs:
-    enabled: false
-
-
 logging:
   level:
     org:
