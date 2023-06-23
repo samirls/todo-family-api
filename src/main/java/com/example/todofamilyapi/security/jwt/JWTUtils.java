@@ -56,7 +56,7 @@ public class JWTUtils {
                     .httpOnly(true);
 
             if (Arrays.asList(environment.getActiveProfiles()).contains("prod")) {
-                builder.domain(".anydomain.com");
+                builder.domain(".samirlaguardia.com");
             }
 
             return builder.build();
@@ -73,7 +73,7 @@ public class JWTUtils {
                 .httpOnly(true);
 
         if (Arrays.asList(environment.getActiveProfiles()).contains("prod")) {
-            builder.domain(".anydomain.com");
+            builder.domain(".samirlaguardia.com");
         }
 
         return builder.build();
