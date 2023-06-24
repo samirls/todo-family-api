@@ -6,6 +6,8 @@ import com.example.todofamilyapi.controller.mappers.UsersMapper;
 import com.example.todofamilyapi.entities.Users;
 import com.example.todofamilyapi.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UsersResponseDTO> listAllUsers() {
-        return userService.listAllUsers().stream().map(usersMapper::fromEntity).toList();
+    public Page<UsersResponseDTO> listAllUsers(final Pageable pageable) {
+        return userService.listAllUsers(pageable).map(usersMapper::fromEntity);
     }
 }

@@ -5,6 +5,9 @@ import com.example.todofamilyapi.exceptions.UserNotFoundException;
 import com.example.todofamilyapi.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +35,8 @@ public class UserService {
         usersRepository.deleteById(id);
     }
 
-    public List<Users> listAllUsers() {
-        return usersRepository.findAll();
+    public Page<Users> listAllUsers(Pageable pageable) {
+        return usersRepository.findAll(pageable);
     }
 
     public Optional<Users> findByEmail(String email) {
