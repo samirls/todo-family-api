@@ -5,13 +5,11 @@ import com.example.todofamilyapi.exceptions.UserNotFoundException;
 import com.example.todofamilyapi.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -47,6 +45,9 @@ public class UserService {
         return usersRepository.existsByEmail(email);
     }
 
+    /**
+     * Aqui insere o usuário default do sistema, caso ele não exista. (esse método é executado sempre quando o sistema está subindo)
+     */
     public void insertAdminUser() {
         if (findByEmail(ADMIN).isEmpty()) {
             log.debug("Administrator user not found, creating...");

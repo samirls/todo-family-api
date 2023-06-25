@@ -24,8 +24,7 @@ public class InviteService {
     //SOMENTE OWNER DA FAMILIA PODE CONVIDAR
     //VERIFICAR SE ELE JA FAZ PARTE DA FAMILIA
     //VERIFICAR SE ELE JA FOI CONVIDADO OU ESTÁ COM UM CONVITE PENDENTE
-
-    public Invite save(final String email, final Long familyId, Principal principal) {
+    public void createInvite(final String email, final Long familyId, Principal principal) {
         final var userWhoInvited = userService.findByEmail(principal.getName());
         final var invitedUser = userService.findByEmail(email);
         final var family = familyService.findById(familyId);
@@ -39,7 +38,7 @@ public class InviteService {
             invite.setInviteCode(family.getFamilyCode());
             invite.setInvitedFamilyName(family.getName());
             invite.setPending(true);
-            return inviteRepositoryRepository.save(invite);
+            inviteRepositoryRepository.save(invite);
         } else {
             throw new UserNotFoundException("user not found");
         }
@@ -49,13 +48,20 @@ public class InviteService {
         return inviteRepositoryRepository.findByUsers_Email(name);
     }
 
+    //TODO caso o usuário que foi convidado rejeite o convite, o convite deve ser deletado também.
+    /**
+     * Esse método é executado quando o evento InviteDeletedEvent é publicado.
+     * @param event event é o evento que foi publicado que veio após a execução do método vinculateFamily da classe FamilyService.
+     *              Aqui ele verifica se o usuário que foi convidado aceitou o convite, caso tenha aceitado ele deleta o convite.
+     */
     @EventListener
     public void handleInviteDeletedEvent(InviteDeletedEvent event) {
         final Optional<Invite> invite = inviteRepositoryRepository.findByInviteCodeAndUsers_Id(event.getInvitedCode(), event.getUserId());
         invite.ifPresent(value -> deleteById(value.getId()));
     }
 
-    public void deleteById(Long id) {
+    //como esse método só é usado internamente nessa classe eu mudei pra private.
+    private void deleteById(Long id) {
         inviteRepositoryRepository.deleteById(id);
     }
 }

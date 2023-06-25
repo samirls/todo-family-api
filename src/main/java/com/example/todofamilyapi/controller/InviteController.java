@@ -23,7 +23,7 @@ public class InviteController {
 
     @PostMapping
     public void invite(@RequestParam String email, @RequestParam Long familyId, Principal principal) {
-        inviteService.save(email, familyId, principal);
+        inviteService.createInvite(email, familyId, principal);
     }
 
     @GetMapping

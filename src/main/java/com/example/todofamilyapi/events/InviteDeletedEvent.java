@@ -1,7 +1,9 @@
 package com.example.todofamilyapi.events;
 
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+@Getter
 public class InviteDeletedEvent extends ApplicationEvent {
 
     private final Long userId;
@@ -11,13 +13,5 @@ public class InviteDeletedEvent extends ApplicationEvent {
         super(source);
         this.userId = userId;
         this.invitedCode = invitedCode;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getInvitedCode() {
-        return invitedCode;
     }
 }

@@ -17,6 +17,10 @@ public class TodoFamilyApiApplication {
         SpringApplication.run(TodoFamilyApiApplication.class, args);
     }
 
+    /**
+     * Chama o método de inicialização do usuário administrador no banco de dados. É chamado sempre que o sistema sobe.
+     * @return
+     */
     @Bean
     protected InitializingBean sendDataBase() {
         return userService::insertAdminUser;

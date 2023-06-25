@@ -48,6 +48,10 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(null);
     }
 
+    /**
+     * Neste método é adicionado a data da ultima autenticação do usuário no banco. Toda vez que ele se loga (no método "authenticateUser" acima) é atualizado.
+     * @param authentication - Objeto de autenticação do Spring Security
+     */
     private void lastAccess(Authentication authentication) {
         final Optional<Users> user = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).username());
         if (user.isPresent()) {
@@ -56,6 +60,11 @@ public class AuthController {
         }
     }
 
+
+    /**
+     * Método para registrar um novo usuário (ele não tem segurança ativa) e retorna o usuário criado.
+     * @return
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupUserRequestDTO signUpRequestDTO) {
         if (Boolean.TRUE.equals(userService.existsByEmail(signUpRequestDTO.email()))) {
@@ -63,6 +72,10 @@ public class AuthController {
         }
 
         final Users user = userMapper.toEntity(signUpRequestDTO);
+
+        //fixme aqui tem um bug neste return, caso o usuário seja criado ele retorna o JSON com o campo password.
+        // Ele deve ser removido pois o usuário nao deve ter acesso a ele mesmo ele mesmo tendo criado.
+        // O ideal é que retorne um DTO com os dados do usuário sem o password.
         return ResponseEntity.ok(userService.save(user));
     }
 

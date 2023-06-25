@@ -21,8 +21,17 @@ public class FamilyService {
     private final ApplicationEventPublisher eventPublisher;
 
 
+    /**
+     * Para criar uma familia é necessario informar o nome, mas ela estava sendo criada sem vincular um usuário.
+     * Mas agora ela é criada vinculando o usuário que está logado no sistema (ou que fez a solicitação para criar a familia)
+     * @param family objeto family que está sendo criado.
+     * @param principal principal é o usuário que está logado no sistema.
+     * @return
+     */
     public Family save(Family family, Principal principal) {
         userService.findByEmail(principal.getName()).ifPresent(user -> family.setUsers(List.of(user)));
+
+        // ao criar uma familia o usuário que está logado no sistema é vinculado como dono da familia.
         family.setFamilyOwner(principal.getName());
         return familyRepository.save(family);
     }
@@ -31,6 +40,12 @@ public class FamilyService {
         return familyRepository.findById(id).orElseThrow(() -> new FamilyNotFoundException("family not found!"));
     }
 
+    /**
+     * Para deletar uma familia é necessário informar o id da familia e o usuário que está logado no sistema.
+     * Não será possivel deletar uma família caso o usuário que está logado no sistema não seja o dono da família.
+     * @param id id é o id da familia que está sendo deletada.
+     * @param pricipal pricipal é o usuário que está logado no sistema.
+     */
     public void deleteById(Long id, Principal pricipal) {
         if (isOwner(id, pricipal)) {
             throw new PermissionDeniedException("you are not the owner of this family!");
@@ -42,6 +57,12 @@ public class FamilyService {
         return familyRepository.findAllByUsers_Email(principal.getName());
     }
 
+    /**
+     * Para vincular uma família é necessário informar o id do usuário, o id da família e o código da família.
+     * @param userId userId é o id do usuário que está sendo vinculado a família.
+     * @param familyId familyId é o id da família que está sendo vinculada ao usuário.
+     * @param familyCode familyCode é o código da família que está sendo vinculada ao usuário. Esse código é gerado automaticamente quando a família é criada.
+     */
     public void vinculateFamily(Long userId, Long familyId, String familyCode) {
         Family family = findById(familyId);
         family.getUsers().add(userService.findById(userId));
@@ -49,13 +70,20 @@ public class FamilyService {
         if (family.getFamilyCode().equals(familyCode)) {
             familyRepository.save(family);
 
-            InviteDeletedEvent event = new InviteDeletedEvent(this, userId, familyCode);
-            eventPublisher.publishEvent(event);
+           /* ao executar o método vinculateFamily e caso de sucesso o evento InviteDeletedEvent é publicado para informar que o convite foi aceito.
+                Entao ele envia o id e codigo da familia para deletar na classe InviteService */
+            eventPublisher.publishEvent(new InviteDeletedEvent(this, userId, familyCode));
         } else {
             throw new FamilyNotFoundException("invalid family code!");
         }
     }
 
+    /**
+     * Essa é a verificação para saber se o usuário que está logado no sistema é o dono da família.
+     * @param familyId familyId é o id da família que está sendo verificada.
+     * @param principal principal é o usuário que está logado no sistema.
+     * @return retorna true caso o usuário que está logado no sistema seja o dono da família.
+     */
     boolean isOwner(Long familyId, Principal principal) {
         return findById(familyId).getFamilyOwner().equals(principal.getName());
     }
