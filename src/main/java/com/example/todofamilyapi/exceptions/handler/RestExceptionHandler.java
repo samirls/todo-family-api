@@ -2,6 +2,7 @@ package com.example.todofamilyapi.exceptions.handler;
 
 import com.example.todofamilyapi.exceptions.FamilyNotFoundException;
 import com.example.todofamilyapi.exceptions.FileNotSupportedException;
+import com.example.todofamilyapi.exceptions.InvalidFamilyCodeException;
 import com.example.todofamilyapi.exceptions.PermissionDeniedException;
 import com.example.todofamilyapi.exceptions.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -57,6 +58,18 @@ public class RestExceptionHandler {
                 .devMsg(ex.getClass().getName())
                 .status(NOT_FOUND.value())
                 .title("family not found!")
+                .build();
+    }
+
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(InvalidFamilyCodeException.class)
+    public ExceptionFilters handleInvalidFamilyCode(final InvalidFamilyCodeException ex) {
+        return ExceptionFilters.builder()
+                .timestamp(LocalDateTime.now())
+                .details(ex.getMessage())
+                .devMsg(ex.getClass().getName())
+                .status(NOT_FOUND.value())
+                .title("invalid family code")
                 .build();
     }
 

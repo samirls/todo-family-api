@@ -12,6 +12,7 @@ public record UsersResponseDTO(
         Boolean active,
         LocalDate createdAt,
         LocalDateTime lastAccess,
-        List<FamilyResponseDTO> family
+        List<FamilyResponseDTO> family,
+        List<InviteResponseDTO> invites
 ) {
 }

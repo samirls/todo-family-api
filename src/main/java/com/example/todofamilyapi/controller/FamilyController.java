@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -27,9 +28,9 @@ public class FamilyController {
     private final FamilyMapper familysMapper;
 
     @PostMapping
-    public FamilyResponseDTO saveUser(@RequestBody FamilyRequestDTO familyRequestDTO) {
+    public FamilyResponseDTO saveFamily(@RequestBody FamilyRequestDTO familyRequestDTO, Principal principal) {
         final Family entity = familysMapper.toEntity(familyRequestDTO);
-        return familysMapper.fromEntity(familyService.save(entity));
+        return familysMapper.fromEntity(familyService.save(entity, principal));
     }
 
     @GetMapping("{id}")
@@ -43,13 +44,12 @@ public class FamilyController {
     }
 
     @GetMapping
-    public List<FamilyResponseDTO> listAllFamily() {
-        return familyService.listAllFamily().stream().map(familysMapper::fromEntity).toList();
+    public List<FamilyResponseDTO> listAllFamily(Principal principal) {
+        return familyService.listAllFamily(principal).stream().map(familysMapper::fromEntity).toList();
     }
 
     @PutMapping
-    public void updateFamily(@RequestParam Long userId, @RequestParam Long familyId) {
-        familyService.vinculateFamily(userId, familyId);
+    public void vinculateFamily(@RequestParam Long userId, @RequestParam Long familyId, @RequestParam String familyCode) {
+        familyService.vinculateFamily(userId, familyId, familyCode);
     }
-
 }

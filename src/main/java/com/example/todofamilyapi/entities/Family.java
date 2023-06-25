@@ -17,6 +17,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
 
@@ -40,6 +41,9 @@ public class Family {
 
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Todo> todos;
+
+    @Column(updatable = false)
+    private String familyCode = UUID.randomUUID().toString();
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
