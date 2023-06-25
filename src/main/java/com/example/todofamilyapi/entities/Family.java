@@ -39,6 +39,9 @@ public class Family {
     )
     private List<Users> users;
 
+    @Column(updatable = false)
+    private String familyOwner;
+
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Todo> todos;
 

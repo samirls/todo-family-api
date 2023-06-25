@@ -3,6 +3,7 @@ package com.example.todofamilyapi.services;
 import com.example.todofamilyapi.entities.Family;
 import com.example.todofamilyapi.events.InviteDeletedEvent;
 import com.example.todofamilyapi.exceptions.FamilyNotFoundException;
+import com.example.todofamilyapi.exceptions.PermissionDeniedException;
 import com.example.todofamilyapi.repositories.FamilyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -22,6 +23,7 @@ public class FamilyService {
 
     public Family save(Family family, Principal principal) {
         userService.findByEmail(principal.getName()).ifPresent(user -> family.setUsers(List.of(user)));
+        family.setFamilyOwner(principal.getName());
         return familyRepository.save(family);
     }
 
@@ -29,7 +31,10 @@ public class FamilyService {
         return familyRepository.findById(id).orElseThrow(() -> new FamilyNotFoundException("family not found!"));
     }
 
-    public void deleteUserById(Long id) {
+    public void deleteById(Long id, Principal pricipal) {
+        if (isOwner(id, pricipal)) {
+            throw new PermissionDeniedException("you are not the owner of this family!");
+        }
         familyRepository.deleteById(id);
     }
 
@@ -49,5 +54,9 @@ public class FamilyService {
         } else {
             throw new FamilyNotFoundException("invalid family code!");
         }
+    }
+
+    boolean isOwner(Long familyId, Principal principal) {
+        return findById(familyId).getFamilyOwner().equals(principal.getName());
     }
 }

@@ -39,8 +39,8 @@ public class FamilyController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteById(@PathVariable Long id) {
-        familyService.deleteUserById(id);
+    public void deleteById(@PathVariable Long id, Principal principal) {
+        familyService.deleteById(id, principal);
     }
 
     @GetMapping

@@ -20,6 +20,10 @@ public class InviteService {
     private final FamilyService familyService;
     private final InviteRepositoryRepository inviteRepositoryRepository;
 
+    //TODO tarefa de casa para o Samir
+    //SOMENTE OWNER DA FAMILIA PODE CONVIDAR
+    //VERIFICAR SE ELE JA FAZ PARTE DA FAMILIA
+    //VERIFICAR SE ELE JA FOI CONVIDADO OU ESTÁ COM UM CONVITE PENDENTE
 
     public Invite save(final String email, final Long familyId, Principal principal) {
         final var userWhoInvited = userService.findByEmail(principal.getName());
@@ -28,11 +32,11 @@ public class InviteService {
 
         if (Boolean.TRUE.equals(userService.existsByEmail(email))) {
             Invite invite = new Invite();
-            invite.setEmail(userWhoInvited.get().getEmail());
+            invitedUser.ifPresent(invite::setUsers);
+            userWhoInvited.ifPresent(users -> invite.setEmail(users.getEmail()));
+            userWhoInvited.ifPresent(users -> invite.setInvitedName(users.getName()));
             invite.setIdFamily(familyId);
-            invite.setInvitedName(userWhoInvited.get().getName());
             invite.setInviteCode(family.getFamilyCode());
-            invite.setUsers(invitedUser.get());
             invite.setInvitedFamilyName(family.getName());
             invite.setPending(true);
             return inviteRepositoryRepository.save(invite);
