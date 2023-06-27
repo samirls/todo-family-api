@@ -2,6 +2,7 @@ package com.example.todofamilyapi.services;
 
 import com.example.todofamilyapi.entities.Invite;
 import com.example.todofamilyapi.events.InviteDeletedEvent;
+import com.example.todofamilyapi.exceptions.PermissionDeniedException;
 import com.example.todofamilyapi.exceptions.UserNotFoundException;
 import com.example.todofamilyapi.repositories.InviteRepositoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +29,26 @@ public class InviteService {
         final var userWhoInvited = userService.findByEmail(principal.getName());
         final var invitedUser = userService.findByEmail(email);
         final var family = familyService.findById(familyId);
+        if (family.getFamilyOwner().equals(principal.getName())) {
+            if (Boolean.TRUE.equals(userService.existsByEmail(email))) {
 
-        if (Boolean.TRUE.equals(userService.existsByEmail(email))) {
-            Invite invite = new Invite();
-            invitedUser.ifPresent(invite::setUsers);
-            userWhoInvited.ifPresent(users -> invite.setEmail(users.getEmail()));
-            userWhoInvited.ifPresent(users -> invite.setInvitedName(users.getName()));
-            invite.setIdFamily(familyId);
-            invite.setInviteCode(family.getFamilyCode());
-            invite.setInvitedFamilyName(family.getName());
-            invite.setPending(true);
-            inviteRepositoryRepository.save(invite);
-        } else {
-            throw new UserNotFoundException("user not found");
+                Invite invite = new Invite();
+                invitedUser.ifPresent(invite::setUsers);
+                userWhoInvited.ifPresent(users -> invite.setEmail(users.getEmail()));
+                userWhoInvited.ifPresent(users -> invite.setInvitedName(users.getName()));
+                invite.setIdFamily(familyId);
+                invite.setInviteCode(family.getFamilyCode());
+                invite.setInvitedFamilyName(family.getName());
+                invite.setPending(true);
+                inviteRepositoryRepository.save(invite);
+            } else {
+                throw new UserNotFoundException("user not found");
+            }
+        } else{
+            throw new PermissionDeniedException("Only the family owner can invite a new member");
         }
+
+
     }
 
     public List<Invite> findByEmail(final String name) {
