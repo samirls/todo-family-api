@@ -1,6 +1,7 @@
 package com.example.todofamilyapi.services;
 
 import com.example.todofamilyapi.entities.Family;
+import com.example.todofamilyapi.entities.Todo;
 import com.example.todofamilyapi.events.InviteDeletedEvent;
 import com.example.todofamilyapi.exceptions.FamilyNotFoundException;
 import com.example.todofamilyapi.exceptions.PermissionDeniedException;
@@ -10,6 +11,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -47,14 +50,21 @@ public class FamilyService {
      * @param pricipal pricipal é o usuário que está logado no sistema.
      */
     public void deleteById(Long id, Principal pricipal) {
-        if (isOwner(id, pricipal)) {
+        if (!isOwner(id, pricipal)) {
             throw new PermissionDeniedException("you are not the owner of this family!");
         }
         familyRepository.deleteById(id);
     }
 
     public List<Family> listAllFamily(Principal principal) {
-        return familyRepository.findAllByUsers_Email(principal.getName());
+        final List<Family> families = familyRepository.findAllByUsers_Email(principal.getName());
+
+        /* ordenando a lista de "todos" sempre por data de criação */
+        for (Family family : families) {
+            family.getTodos().sort(Comparator.comparing(Todo::getCreatedAt));
+        }
+
+        return families;
     }
 
     /**

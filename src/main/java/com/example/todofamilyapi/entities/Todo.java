@@ -23,6 +23,9 @@ public class Todo {
     private String todoName;
     private Boolean concluded;
 
+    @Column(updatable = false)
+    private String owner;
+
     @ManyToOne
     private Family family;
 
@@ -33,5 +36,10 @@ public class Todo {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void setConcluded(Boolean status) {
+        this.concluded = status;
+        this.updatedAt = LocalDateTime.now();
     }
 }

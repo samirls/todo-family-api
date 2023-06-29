@@ -85,6 +85,18 @@ public class RestExceptionHandler {
                 .build();
     }
 
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(NullPointerException.class)
+    public ExceptionFilters handleNullPointException(final NullPointerException ex) {
+        return ExceptionFilters.builder()
+                .timestamp(LocalDateTime.now())
+                .details(ex.getMessage())
+                .devMsg(ex.getClass().getName())
+                .status(NOT_FOUND.value())
+                .title("Nullpointer")
+                .build();
+    }
+
     @ResponseStatus(NOT_ACCEPTABLE)
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ExceptionFilters maxFileSizeExceeded(final MaxUploadSizeExceededException ex) {
