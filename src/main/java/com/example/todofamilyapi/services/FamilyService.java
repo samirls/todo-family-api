@@ -11,7 +11,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,7 +28,6 @@ public class FamilyService {
      * Mas agora ela é criada vinculando o usuário que está logado no sistema (ou que fez a solicitação para criar a familia)
      * @param family objeto family que está sendo criado.
      * @param principal principal é o usuário que está logado no sistema.
-     * @return
      */
     public Family save(Family family, Principal principal) {
         userService.findByEmail(principal.getName()).ifPresent(user -> family.setUsers(List.of(user)));
